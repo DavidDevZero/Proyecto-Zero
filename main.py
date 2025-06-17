@@ -27,12 +27,18 @@ def obtener_balance(usuario_id):
 def mostrar_gastos(usuario_id):
     pass
 
+def calcular_balance(usuario_id):
+    total_ingresos = sum(ingreso["cantidad"] for ingreso in ingresos_db if ingreso["usuario_id"] == usuario_id)
+    total_gastos = sum(gasto["cantidad"] for gasto in gastos_db if gasto["usuario_id"] == usuario_id)
+    balance = total_ingresos - total_gastos
+    print(f"💰 Balance actual: {balance:.2f}€")
 def menu_principal(usuario_id):
     while True:     # bucle infinito
         print("\n=== MENU PRINCIPAL ===")
         print("1. registrar gasto")
         print("2. registrar ingreso")
-        print("3. salir")
+        print("3. calcular balance")
+        print("4. salir")
 
         opcion = input("elige una opcion: ")
 
@@ -41,6 +47,8 @@ def menu_principal(usuario_id):
         elif opcion == "2":
             registrar_ingreso(usuario_id)
         elif opcion == "3":
+            calcular_balance(usuario_id)
+        elif opcion == "4":
             print("👋 saliendo del programa...")
             break
         else:
