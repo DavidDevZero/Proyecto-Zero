@@ -7,12 +7,9 @@ def registrar_usuario():
     # Esta función todavía no hace nada
     pass
 
-import sqlite3  
+import sqlite3  # Sólo una vez, al principio
 
-import sqlite3  # ✅ Importamos solo una vez, al principio
-
-# --- Funciones ---
-
+# --- Registrar gasto en la base de datos ---
 def registrar_gasto(usuario_id):
     cantidad = float(input("Introduce la cantidad del gasto: "))
     categoria = input("Introduce la categoría del gasto: ")
@@ -29,6 +26,7 @@ def registrar_gasto(usuario_id):
 
     print("✅ Gasto registrado en la base de datos.")
 
+# --- Registrar ingreso en la base de datos ---
 def registrar_ingreso(usuario_id):
     cantidad = float(input("Introduce la cantidad del ingreso: "))
     fuente = input("Introduce la fuente del ingreso: ")
@@ -44,12 +42,13 @@ def registrar_ingreso(usuario_id):
 
     print("✅ Ingreso registrado en la base de datos.")
 
+# --- Mostrar gastos con ID para editarlos ---
 def mostrar_gastos(usuario_id):
     print("\n--- LISTA DE GASTOS ---")
     conexion = sqlite3.connect("tracker.db")
     cursor = conexion.cursor()
     cursor.execute("""
-        SELECT categoria, cantidad, fecha, descripcion FROM gastos
+        SELECT id, categoria, cantidad, fecha, descripcion FROM gastos
         WHERE usuario_id = ?
         ORDER BY fecha DESC
     """, (usuario_id,))
@@ -60,9 +59,31 @@ def mostrar_gastos(usuario_id):
         print("📭 No hay gastos registrados.")
         return
 
-    for categoria, cantidad, fecha, descripcion in resultados:
-        print(f"📌 {fecha[:10]} | {categoria} | {cantidad:.2f}€ | {descripcion or 'Sin descripción'}")
+    for id, categoria, cantidad, fecha, descripcion in resultados:
+        print(f"🆔 {id} | {fecha[:10]} | {categoria} | {cantidad:.2f}€ | {descripcion or 'Sin descripción'}")
 
+# --- Modificar gasto seleccionado por ID ---
+def modificar_gasto(usuario_id):
+    mostrar_gastos(usuario_id)
+    gasto_id = input("📝 Ingresa el ID del gasto que quieres modificar: ")
+
+    nueva_categoria = input("Nueva categoría: ")
+    nueva_cantidad = float(input("Nueva cantidad: "))
+    nueva_descripcion = input("Nueva descripción (opcional): ")
+
+    conexion = sqlite3.connect("tracker.db")
+    cursor = conexion.cursor()
+    cursor.execute("""
+        UPDATE gastos
+        SET categoria = ?, cantidad = ?, descripcion = ?
+        WHERE id = ? AND usuario_id = ?
+    """, (nueva_categoria, nueva_cantidad, nueva_descripcion, gasto_id, usuario_id))
+    conexion.commit()
+    conexion.close()
+
+    print("✅ Gasto actualizado con éxito.")
+
+# --- Calcular balance desde base de datos ---
 def calcular_balance(usuario_id):
     conexion = sqlite3.connect("tracker.db")
     cursor = conexion.cursor()
@@ -81,6 +102,7 @@ def calcular_balance(usuario_id):
     print(f"💸 Total Gastos:   {total_gastos:.2f}€")
     print(f"💰 Balance Neto:   {balance:.2f}€")
 
+# --- Menú principal del programa ---
 def menu_principal(usuario_id):
     while True:
         print("\n=== MENÚ PRINCIPAL ===")
@@ -88,7 +110,8 @@ def menu_principal(usuario_id):
         print("2. Registrar Ingreso")
         print("3. Mostrar Gastos")
         print("4. Ver Balance")
-        print("5. Salir")
+        print("5. Modificar Gasto")
+        print("6. Salir")
 
         opcion = input("Elige una opción: ")
 
@@ -101,16 +124,16 @@ def menu_principal(usuario_id):
         elif opcion == "4":
             calcular_balance(usuario_id)
         elif opcion == "5":
+            modificar_gasto(usuario_id)
+        elif opcion == "6":
             print("👋 Saliendo del programa...")
             break
         else:
             print("❌ Opción no válida. Inténtalo de nuevo.")
 
-# --- Punto de entrada ---
-
+# --- Punto de entrada principal ---
 if __name__ == "__main__":
     usuario_logueado_id = 1  # Simulación de usuario autenticado
     menu_principal(usuario_logueado_id)
-
 
    
