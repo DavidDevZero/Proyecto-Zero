@@ -24,7 +24,7 @@ def registrar_gasto(usuario_id):
     conexion.commit()
     conexion.close()
 
-    print("✅ Gasto registrado en la base de datos.")
+    print(" Gasto registrado en la base de datos.")
 
 # --- Registrar ingreso en la base de datos ---
 def registrar_ingreso(usuario_id):
@@ -40,7 +40,7 @@ def registrar_ingreso(usuario_id):
     conexion.commit()
     conexion.close()
 
-    print("✅ Ingreso registrado en la base de datos.")
+    print(" Ingreso registrado en la base de datos.")
 
 # --- Mostrar gastos con ID para editarlos ---
 def mostrar_gastos(usuario_id):
@@ -56,7 +56,7 @@ def mostrar_gastos(usuario_id):
     conexion.close()
 
     if not resultados:
-        print("📭 No hay gastos registrados.")
+        print(" No hay gastos registrados.")
         return
 
     for id, categoria, cantidad, fecha, descripcion in resultados:
@@ -65,7 +65,7 @@ def mostrar_gastos(usuario_id):
 # --- Modificar gasto seleccionado por ID ---
 def modificar_gasto(usuario_id):
     mostrar_gastos(usuario_id)
-    gasto_id = input("📝 Ingresa el ID del gasto que quieres modificar: ")
+    gasto_id = input(" Ingresa el ID del gasto que quieres modificar: ")
 
     nueva_categoria = input("Nueva categoría: ")
     nueva_cantidad = float(input("Nueva cantidad: "))
@@ -81,7 +81,7 @@ def modificar_gasto(usuario_id):
     conexion.commit()
     conexion.close()
 
-    print("✅ Gasto actualizado con éxito.")
+    print(" Gasto actualizado con éxito.")
 
 # --- Calcular balance desde base de datos ---
 def calcular_balance(usuario_id):
@@ -98,9 +98,9 @@ def calcular_balance(usuario_id):
 
     balance = total_ingresos - total_gastos
     print("\n--- BALANCE GENERAL ---")
-    print(f"💵 Total Ingresos: {total_ingresos:.2f}€")
-    print(f"💸 Total Gastos:   {total_gastos:.2f}€")
-    print(f"💰 Balance Neto:   {balance:.2f}€")
+    print(f" Total Ingresos: {total_ingresos:.2f}€")
+    print(f" Total Gastos:   {total_gastos:.2f}€")
+    print(f" Balance Neto:   {balance:.2f}€")
 
 # --- Menú principal del programa ---
 def menu_principal(usuario_id):
