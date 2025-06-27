@@ -20,21 +20,33 @@ def registrar_usuario():
 import sqlite3  # Sólo una vez, al principio
 
 # --- Registrar gasto en la base de datos ---
-def registrar_gasto(usuario_id, db):
+def registrar_gasto(usuario_id):
     cantidad = float(input("Introduce la cantidad del gasto: "))
     categoria = input("Introduce la categoría del gasto: ")
     descripcion = input("Introduce una descripción (opcional): ")
 
-    conexion = sqlite3.connect("tracker.db")
-    cursor = conexion.cursor()
-    cursor.execute("""
-        INSERT INTO gastos (usuario_id, cantidad, categoria, descripcion)
-        VALUES (?, ?, ?, ?)
-    """, (usuario_id, cantidad, categoria, descripcion))
-    conexion.commit()
-    conexion.close()
+    while True:
+        try:
+            cantidad_str = input("Introduce la cantidad del gasto: ")
+            cantidad = float(cantidad_str)
+            break
+        except ValueError:
+            print("Error: Por favor, introduce únicamente números.")
+    
+    categoria = input("Introduce la categoría del gasto: ")
+    sql = "INSERT INTO gastos (usuario_id, cantidad, categoria) VALUES (?, ?, ?)"
+    datos = (usuario_id, cantidad, categoria)
 
-    print(" Gasto registrado en la base de datos.")
+    try:
+        with sqlite3.connect('tracker.db') as conn:
+            cursor = conn.cursor()
+            cursor.execute(sql, datos)
+            conn.commit()
+        
+        print("Gasto registrado con éxito.")
+
+    except sqlite3.Error as e:
+        print(f"ERROR al interactuar con la base de datos: {e}")
 
 # --- Registrar ingreso en la base de datos ---
 def registrar_ingreso(usuario_id):
