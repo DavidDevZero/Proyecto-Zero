@@ -1,3 +1,13 @@
+# PLAN PARA REFACTORIZAR registrar_gasto:
+# 1. La función recibirá el 'usuario_id' y la 'db'.
+# 2. Dentro de la función, me conectaré a la base de datos.
+# 3. Crearé un cursor para dar las órdenes.
+# 4. Definiré la sentencia SQL "INSERT INTO..." en una variable.
+# 5. Pediré los datos al usuario (cantidad, categoría).
+# 6. Usaré cursor.execute() con la sentencia SQL y los datos del usuario por separado.
+# 7. Haré conn.commit() para guardar los cambios.
+# 8. Cerraré la conexión con conn.close().
+
 # base de datos en memoria
 gastos_db = []
 ingresos_db = []
