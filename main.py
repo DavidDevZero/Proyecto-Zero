@@ -20,7 +20,7 @@ def registrar_usuario():
 import sqlite3  # Sólo una vez, al principio
 
 # --- Registrar gasto en la base de datos ---
-def registrar_gasto(usuario_id):
+def registrar_gasto(usuario_id, db):
     cantidad = float(input("Introduce la cantidad del gasto: "))
     categoria = input("Introduce la categoría del gasto: ")
     descripcion = input("Introduce una descripción (opcional): ")
